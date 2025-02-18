@@ -1,0 +1,32 @@
+services:
+  stable-diffusion:
+    user: "1000:1000"
+    image: stable-diffusion-webui
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: automatic1111
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+      - COMMANDLINE_ARGS=--xformers --enable-insecure-extension-access --api --no-download-sd-model --listen
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - ./models:/home/sdwui/stable-diffusion-webui/models
+      - ./extensions:/home/sdwui/stable-diffusion-webui/extensions
+      - ./models_root/SwinIR:/home/sdwui/stable-diffusion-webui/SwinIR
+      - ./models_root/embeddings:/home/sdwui/stable-diffusion-webui/embeddings
+      - ./models_root/SwinIR:/home/sdwui/stable-diffusion-webui/SwinIR
+      - ./models_root/ESRGAN:/home/sdwui/stable-diffusion-webui/ESRGAN
+      - ./outputs:/home/sdwui/stable-diffusion-webui/outputs
+      - ./config/webui-user.sh:/home/sdwui/stable-diffusion-webui/webui-user.sh
+    ports:
+      - "7860:7860"
+    stdin_open: true
+    tty: true  # Esto mantiene el contenedor abierto
