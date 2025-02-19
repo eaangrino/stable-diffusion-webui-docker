@@ -43,7 +43,6 @@ RUN chmod +x webui-user.sh
 
 # Configure environment variables
 ENV TF_ENABLE_ONEDNN_OPTS=0
-ENV XLA_FLAGS="--xla_gpu_cuda_data_dir=/usr/local/cuda"
 ENV PATH="/home/$USERNAME/stable-diffusion-webui/venv/bin:$PATH"
 
 # Force the use of TCMalloc

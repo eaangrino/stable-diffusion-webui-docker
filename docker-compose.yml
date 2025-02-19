@@ -8,14 +8,14 @@ services:
     container_name: automatic1111
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
-      - COMMANDLINE_ARGS=--xformers --enable-insecure-extension-access --api --no-download-sd-model --ui-config-file json-configs/ui-config.json --ui-settings-file json-configs/config.json --listen
+      - COMMANDLINE_ARGS=--xformers --enable-insecure-extension-access --no-half-vae --api --no-download-sd-model --ui-config-file json-configs/ui-config.json --ui-settings-file json-configs/config.json --listen
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
               count: all
-              capabilities: [gpu, compute, utility]
+              capabilities: [compute, utility]
     volumes:
       - ./models:/home/sdwui/stable-diffusion-webui/models
       - ./extensions:/home/sdwui/stable-diffusion-webui/extensions
