@@ -20,7 +20,8 @@ RUN apt-get update && apt-get install -y \
     libgl1 \
     libglib2.0-0 \
     libtcmalloc-minimal4 \
-    && rm -rf /var/lib/apt/lists/*
+    nano
+    # && rm -rf /var/lib/apt/lists/*
 
 # Grant sudo permissions without a password for the user
 RUN echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME \
@@ -33,6 +34,7 @@ WORKDIR /home/$USERNAME
 # Clone the Stable Diffusion WebUI repository
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
 
+RUN mkdir json-configs
 # Enter the Stable Diffusion directory
 WORKDIR /home/$USERNAME/stable-diffusion-webui
 
@@ -40,7 +42,8 @@ WORKDIR /home/$USERNAME/stable-diffusion-webui
 RUN chmod +x webui-user.sh
 
 # Configure environment variables
-ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
+ENV TF_ENABLE_ONEDNN_OPTS=0
+ENV XLA_FLAGS="--xla_gpu_cuda_data_dir=/usr/local/cuda"
 ENV PATH="/home/$USERNAME/stable-diffusion-webui/venv/bin:$PATH"
 
 # Force the use of TCMalloc

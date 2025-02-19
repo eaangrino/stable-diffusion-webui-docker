@@ -1,5 +1,8 @@
 models
 config
 extensions
-models_root
 outputs
+extras
+venv
+repositories
+json-configs
