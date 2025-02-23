@@ -7,7 +7,6 @@ services:
       dockerfile: Dockerfile
     container_name: automatic1111
     environment:
-      - NVIDIA_VISIBLE_DEVICES=all
       - COMMANDLINE_ARGS=--xformers --enable-insecure-extension-access --no-half-vae --api --no-download-sd-model --ui-config-file json-configs/ui-config.json --ui-settings-file json-configs/config.json --listen
     deploy:
       resources:
@@ -28,4 +27,11 @@ services:
       - ./json-configs:/home/sdwui/stable-diffusion-webui/json-configs
     ports:
       - "7860:7860"
-    tty: true  # Esto mantiene el contenedor abierto
+    networks:
+      - sd-network
+    tty: true 
+
+networks:
+  sd-network:
+    name: sd-network
+    driver: bridge
