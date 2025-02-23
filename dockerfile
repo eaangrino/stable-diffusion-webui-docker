@@ -1,5 +1,4 @@
-# FROM nvidia/cuda:11.8.0-devel-ubuntu22.04
-FROM pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime
+FROM pytorch/pytorch:2.6.0-cuda12.4-cudnn9-runtime
 
 # Create environment variables
 ARG USERNAME=sdwui
@@ -15,16 +14,13 @@ RUN apt-get update && apt-get install -y \
     sudo \
     wget \
     git \
-    python3 \
-    python3-venv \
-    python3-pip \
     libgl1 \
     libglib2.0-0 \
     libtcmalloc-minimal4 \
-    nano
-    # && rm -rf /var/lib/apt/lists/*
+    nano 
+    # apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Grant sudo permissions without a password for the user
+# Grant sudo permissions
 RUN echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
@@ -35,19 +31,25 @@ WORKDIR /home/$USERNAME
 # Clone the Stable Diffusion WebUI repository
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
 
+# Create path for json configs
 RUN mkdir json-configs
+
 # Enter the Stable Diffusion directory
 WORKDIR /home/$USERNAME/stable-diffusion-webui
 
 # Grant execution permissions to webui-user.sh
 RUN chmod +x webui-user.sh
 
-# Configure environment variables
+# Prevent TensorFlow/PyTorch from registering CUDA multiple times
 ENV TF_ENABLE_ONEDNN_OPTS=0
-ENV PATH="/home/$USERNAME/stable-diffusion-webui/venv/bin:$PATH"
-
-# Force the use of TCMalloc
+ENV NVIDIA_TF32_OVERRIDE=0
+ENV XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/local/cuda
+ENV CUDA_MODULE_LOADING=LAZY
+ENV NVIDIA_VISIBLE_DEVICES=all
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libtcmalloc_minimal.so.4"
+
+# Activate venv in each bash session (work after run ./webui.sh or make start)
+RUN echo 'source /home/sdwui/stable-diffusion-webui/venv/bin/activate' >> /home/sdwui/.bashrc
 
 # Keep the container open
 CMD ["/bin/bash"]
