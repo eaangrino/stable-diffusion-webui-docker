@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: automatic1111
     environment:
-      - COMMANDLINE_ARGS=--xformers --enable-insecure-extension-access --no-half-vae --api --no-download-sd-model --ui-config-file json-configs/ui-config.json --ui-settings-file json-configs/config.json --listen
+      - COMMANDLINE_ARGS=--xformers --enable-insecure-extension-access --no-half-vae --api --no-download-sd-model --data-dir "/home/sdwui/data" --embeddings-dir "/home/sdwui/data/embeddings" --listen
     deploy:
       resources:
         reservations:
@@ -16,15 +16,10 @@ services:
               count: all
               capabilities: [compute, utility]
     volumes:
-      - ./models:/home/sdwui/stable-diffusion-webui/models
-      - ./extensions:/home/sdwui/stable-diffusion-webui/extensions
-      - ./extras/embeddings:/home/sdwui/stable-diffusion-webui/embeddings
       - ./venv:/home/sdwui/stable-diffusion-webui/venv
-      - ./outputs:/home/sdwui/stable-diffusion-webui/outputs
       - ./repositories:/home/sdwui/stable-diffusion-webui/repositories
       - ./config/webui-user.sh:/home/sdwui/stable-diffusion-webui/webui-user.sh
-      - ./config/webui.sh:/home/sdwui/stable-diffusion-webui/webui.sh
-      - ./json-configs:/home/sdwui/stable-diffusion-webui/json-configs
+      - ./data:/home/sdwui/data
     ports:
       - "7860:7860"
     networks:
