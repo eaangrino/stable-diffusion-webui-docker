@@ -1,8 +1,5 @@
-models
 config
 extensions
-outputs
-extras
 venv
 repositories
-json-configs
+data
