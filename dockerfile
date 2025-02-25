@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y \
     libgl1 \
     libglib2.0-0 \
     libtcmalloc-minimal4 \
+    g++ \
+    build-essential \
     nano 
     # apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -30,9 +32,6 @@ WORKDIR /home/$USERNAME
 
 # Clone the Stable Diffusion WebUI repository
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
-
-# Create path for json configs
-RUN mkdir json-configs
 
 # Enter the Stable Diffusion directory
 WORKDIR /home/$USERNAME/stable-diffusion-webui
