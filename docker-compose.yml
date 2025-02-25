@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: automatic1111
     environment:
-      - COMMANDLINE_ARGS=--xformers --enable-insecure-extension-access --no-half-vae --api --no-download-sd-model --data-dir "/home/sdwui/data" --embeddings-dir "/home/sdwui/data/embeddings" --listen
+      - COMMANDLINE_ARGS=--xformers --enable-insecure-extension-access --no-half-vae --api --no-download-sd-model --data-dir "/home/sdwui/data" --embeddings-dir "/home/sdwui/data/embeddings" --port 7860 --listen
     deploy:
       resources:
         reservations:
